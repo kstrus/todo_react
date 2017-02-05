@@ -5,29 +5,23 @@ import {TodoForm, TodoList} from './components/todo'
 import {addTodo, generateId} from './lib/todoHelpers'
 
 class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      todos: [
-        {id: 1, name: 'Learn JSX', isCompleted: false},
-        {id: 2, name: 'Buy milk', isCompleted: true},
-        {id: 3, name: 'Build an awesome app', isCompleted: false},
-      ],
-      currentTodo: ''
-    };
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleEmptySubmit = this.handleEmptySubmit.bind(this);
-  }
+  state = {
+    todos: [
+      {id: 1, name: 'Learn JSX', isCompleted: false},
+      {id: 2, name: 'Buy milk', isCompleted: true},
+      {id: 3, name: 'Build an awesome app', isCompleted: false},
+    ],
+    currentTodo: ''
+  };
 
-  handleInputChange(e) {
+  handleInputChange = (e) => {
     this.setState({
       currentTodo: e.target.value,
       errorMessage: ''
     });
-  }
+  };
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     const newTodo = {
       name: this.state.currentTodo,
@@ -38,12 +32,12 @@ class App extends React.Component {
       todos: addTodo(this.state.todos, newTodo),
       currentTodo: ''
     });
-  }
+  };
 
-  handleEmptySubmit(e) {
+  handleEmptySubmit = (e) => {
     e.preventDefault();
     this.setState({errorMessage: 'Please supply a todo name'})
-  }
+  };
 
   render() {
     const submitHandler = this.state.currentTodo ? this.handleSubmit : this.handleEmptySubmit;
