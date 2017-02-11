@@ -76,3 +76,15 @@
   font-size: 13px;
   margin-bottom: 10px;
 }
+
+.filter a {
+    font-size: 14px;
+    color: darkgreen;
+    text-decoration: none;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.filter a.active {
+    color: limegreen;
+}

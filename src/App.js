@@ -1,8 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {TodoForm, TodoList} from './components/todo'
-import {addTodo, generateId, findById, toggleTodo, updateTodo, removeTodo} from './lib/todoHelpers'
+import {TodoForm, TodoList, Filter} from './components/todo'
+import {addTodo, generateId, findById, toggleTodo, updateTodo, removeTodo, filterTodos} from './lib/todoHelpers'
 import {partial, pipe} from './lib/utils'
 
 class App extends React.Component {
@@ -13,6 +13,10 @@ class App extends React.Component {
       {id: 3, name: 'Build an awesome app', isCompleted: false},
     ],
     currentTodo: ''
+  };
+
+  static contextTypes = {
+    route: React.PropTypes.string
   };
 
   handleToggle = (id) => {
@@ -54,6 +58,7 @@ class App extends React.Component {
 
   render() {
     const submitHandler = this.state.currentTodo ? this.handleSubmit : this.handleEmptySubmit;
+    const displayTodos = filterTodos(this.state.todos, this.context.route);
     return (
       <div className='app'>
         <div className='app_header'>
@@ -65,9 +70,10 @@ class App extends React.Component {
           <TodoForm handleInputChange={this.handleInputChange}
                     handleSubmit={submitHandler}
                     currentTodo={this.state.currentTodo} />
-          <TodoList todos={this.state.todos}
+          <TodoList todos={displayTodos}
                     handleToggle={this.handleToggle}
-                    handleRemove={this.handleRemove}/>
+                    handleRemove={this.handleRemove} />
+          <Filter/>
         </div>
       </div>
     );
