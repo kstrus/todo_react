@@ -42,6 +42,30 @@
   list-style: none;
 }
 
+.todo_list .todo_item {
+    line-height: 24px;
+}
+
+.todo_list .todo_item:hover .remove_button {
+    visibility: visible;
+}
+
+.remove_button {
+    margin: 3px 5px 0 0;
+    text-decoration: none;
+    padding: 0 4px;
+    color: #8b0000;
+    border: 1px solid #8b0000;
+    background-color: rgba(139, 0, 0, 0.5);
+    border-radius: 3px;
+    font-size: 12px;
+    vertical-align: top;
+    line-height: normal;
+    display: inline-block;
+    visibility: hidden;
+    cursor: pointer;
+}
+
 .error {
   display: inline-block;
   width: 100%;
