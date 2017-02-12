@@ -66,15 +66,24 @@
     cursor: pointer;
 }
 
-.error {
+.message {
   display: inline-block;
   width: 100%;
   padding: 7px 20px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.message.error {
   color: #8b0000;
   background-color: rgba(139, 0, 0, 0.5);
   border: 1px solid #8b0000;
-  font-size: 13px;
-  margin-bottom: 10px;
+}
+
+.message.success {
+  color: #4cae4c;
+  background-color: rgba(76, 174, 76, 0.3);
+  border: 1px solid #4cae4c;
 }
 
 .filter a {

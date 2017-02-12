@@ -4,14 +4,11 @@ import './App.css';
 import {TodoForm, TodoList, Filter} from './components/todo'
 import {addTodo, generateId, findById, toggleTodo, updateTodo, removeTodo, filterTodos} from './lib/todoHelpers'
 import {partial, pipe} from './lib/utils'
+import {loadTodos, createTodo, saveTodo, destroyTodo} from './lib/todoService'
 
 class App extends React.Component {
   state = {
-    todos: [
-      {id: 1, name: 'Learn JSX', isCompleted: false},
-      {id: 2, name: 'Buy milk', isCompleted: true},
-      {id: 3, name: 'Build an awesome app', isCompleted: false},
-    ],
+    todos: [],
     currentTodo: ''
   };
 
@@ -19,10 +16,19 @@ class App extends React.Component {
     route: React.PropTypes.string
   };
 
+  showTemporaryMessage = (message) => {
+    this.setState({message});
+    setTimeout(() => this.setState({message: ''}), 2000);
+  };
+
   handleToggle = (id) => {
-    const getUpdatedTodos = pipe(findById, toggleTodo, partial(updateTodo, this.state.todos));
-    const updatedTodos = getUpdatedTodos(id, this.state.todos);
+    const getToggledTodo = pipe(findById, toggleTodo);
+    const toggledTodo = getToggledTodo(id, this.state.todos);
+    const getUpdatedTodos = partial(updateTodo, this.state.todos);
+    const updatedTodos = getUpdatedTodos(toggledTodo);
     this.setState({todos: updatedTodos});
+    saveTodo(toggledTodo)
+      .then(() => this.showTemporaryMessage('Todo saved'));
   };
 
   handleInputChange = (e) => {
@@ -43,6 +49,8 @@ class App extends React.Component {
       todos: addTodo(this.state.todos, newTodo),
       currentTodo: ''
     });
+    createTodo(newTodo)
+      .then(() => this.showTemporaryMessage('Todo added'));
   };
 
   handleEmptySubmit = (e) => {
@@ -54,7 +62,14 @@ class App extends React.Component {
     e.preventDefault();
     const updatedTodos = removeTodo(this.state.todos, id);
     this.setState({todos: updatedTodos});
+    destroyTodo(id)
+      .then(() => this.showTemporaryMessage('Todo removed'));
   };
+
+  componentDidMount() {
+    loadTodos()
+      .then(todos => this.setState({todos}));
+  }
 
   render() {
     const submitHandler = this.state.currentTodo ? this.handleSubmit : this.handleEmptySubmit;
@@ -66,7 +81,8 @@ class App extends React.Component {
           <h2>React Todos</h2>
         </div>
         <div className='todo_app'>
-          {this.state.errorMessage && <span className="error">{this.state.errorMessage}</span>}
+          {this.state.errorMessage && <span className="message error">{this.state.errorMessage}</span>}
+          {this.state.message && <span className="message success">{this.state.message}</span>}
           <TodoForm handleInputChange={this.handleInputChange}
                     handleSubmit={submitHandler}
                     currentTodo={this.state.currentTodo} />
